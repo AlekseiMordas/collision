@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Demo Suite">
+	<test verbose="1" name="City Search Count Returns Greater Than Zero" annotations="JDK">
+		<classes>
+			<class name="com.callision.tests.CallTest" />
+		</classes>
+	</test>
+</suite>
