@@ -12,8 +12,7 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import com.callision.browser.Browser;
-import com.callision.service.cli.configs.BrowserConfig;
+import com.callision.browser.DriverManager;
 import com.callision.utils.ScreenshotUtils;
 
 
@@ -26,8 +25,7 @@ public class SuiteListener implements ISuiteListener, ITestListener,
 
 	@Override
 	public void onTestFailure(ITestResult result) {
-		ScreenshotUtils.makeScreenshot(Browser.getInstance(BrowserConfig.getBrowserType())
-				.getSeleniumDriver().getDriver(), result
+		ScreenshotUtils.makeScreenshot(DriverManager.getDriver().getDriver(), result
 				.getTestContext().getName() + "_" + result.getName());
 		LOGGER.info("================================== TEST "
 				+ result.getName()

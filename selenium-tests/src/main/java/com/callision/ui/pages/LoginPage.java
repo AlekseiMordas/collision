@@ -12,8 +12,6 @@ public class LoginPage extends Page {
 
 	private static final String URL_PAGE = "https://example.callision.com/";
 
-	protected WebDriver driver;
-
 	@FindBy(locator = "//input[@id='login']")
 	private BrowserElement usernameInput;
 
@@ -22,12 +20,15 @@ public class LoginPage extends Page {
 
 	@FindBy(locator = "//*[@id='submit']")
 	private BrowserElement loginButton;
+	
+	private final String PROGRESS_INDICATOR = "//*[contains(@class,'progress-bar')]";
 
-	public LoginPage(WebDriver driver) {
-		this.driver = driver;
+	public LoginPage() {
+		super();
 	}
 
 	public LoginPage openPage() {
+
 		driver.get(URL_PAGE);
 		return PageFactory.initElements(driver, LoginPage.class);
 	}
@@ -36,7 +37,9 @@ public class LoginPage extends Page {
 		usernameInput.type(user.getUsername());
 		passwordInput.type(user.getPassword());
 		loginButton.click();
-		return new MainPage(driver);
+		driver.waitForElementDissappear(PROGRESS_INDICATOR, 60);
+//		waitForAjax();
+		return PageFactory.initElements(driver, MainPage.class);
 	}
 
 	@Override

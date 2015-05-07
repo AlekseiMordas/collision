@@ -1,14 +1,16 @@
 package com.callision.service.cli.configs;
 
+import com.callision.browser.Browsers;
+
 public class BrowserConfig {
 
-	private static String browserType;
+	private static Browsers browserType;
 	
-	public static String getBrowserType() {
+	public static Browsers getBrowserType() {
 		return browserType;
 	}
 
-	public static void setBrowserType(String type) {
+	public static void setBrowserType(Browsers type) {
 		BrowserConfig.browserType = type;
 	}
 

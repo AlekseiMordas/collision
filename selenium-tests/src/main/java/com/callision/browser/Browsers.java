@@ -1,7 +1,8 @@
 package com.callision.browser;
 
 public enum Browsers {
-	FF("FF");
+	FF("FF"),
+	CHROME("CHROME");
 
 	private String type;
 

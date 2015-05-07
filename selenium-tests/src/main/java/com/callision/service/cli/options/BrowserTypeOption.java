@@ -23,7 +23,7 @@ public class BrowserTypeOption implements ICliOption {
 
 	@Override
 	public void parse(String[] values) {
-		BrowserConfig.setBrowserType(values[0].toUpperCase());
+		BrowserConfig.setBrowserType( Browsers.valueOf(values[0].toUpperCase()));
 
 	}
 

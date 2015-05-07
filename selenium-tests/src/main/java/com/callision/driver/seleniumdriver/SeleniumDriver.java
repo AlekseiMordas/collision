@@ -9,10 +9,14 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 import com.callision.browser.Browsers;
+import com.callision.browser.ChromeFactory;
 import com.callision.browser.FirefoxFactory;
 
 /**
@@ -22,26 +26,29 @@ import com.callision.browser.FirefoxFactory;
 public class SeleniumDriver implements WebDriver {
 
 	private static final Logger LOGGER = Logger.getLogger(SeleniumDriver.class);
+	
+	public static long IMPLICIT_WAIT_TIMEOUT = 30;
+	public static long ZERO_WAIT_TIMEOUT = 0;
 
 	private WebDriver driver;
 
 	private static final int WAIT_CUSTOM = 5;
 
-	public SeleniumDriver(String browserType) {
-
-		Browsers browserOption = Browsers.valueOf(browserType.toUpperCase());
-		switch (browserOption) {
+	public SeleniumDriver(Browsers browserType) {
+		switch (browserType) {
 		case FF:
 			driver = new FirefoxFactory().createBrowser(true, false);
-			driver.manage().timeouts()
-					.implicitlyWait(WAIT_CUSTOM, TimeUnit.SECONDS);
 			driver.manage().window().maximize();
 			break;
-		default:
-			throw new EnumConstantNotPresentException(Browsers.class,
-					browserOption.name());
-		}
+		case CHROME:
+			driver = new ChromeFactory().createBrowser(true, true);
+			break;
 
+		default:
+			throw new RuntimeException("not implemented");
+		}
+		driver.manage().timeouts()
+				.implicitlyWait(WAIT_CUSTOM, TimeUnit.SECONDS);
 	}
 
 	@Override
@@ -193,5 +200,37 @@ public class SeleniumDriver implements WebDriver {
 
 	public String getAttribute(String foundBy, String attribute) {
 		return driver.findElement(By.xpath(foundBy)).getAttribute(attribute);
+	}
+	
+	public void waitForElementDissappear(final String locator,
+			long timeOutInSeconds) {
+		LOGGER.info("Waiting for element disappearence'" + locator
+				+ "' during " + timeOutInSeconds + "sec timeout ...");
+		new WebDriverWait(driver, timeOutInSeconds)
+				.until(new ExpectedCondition<Boolean>() {
+					@Override
+					public Boolean apply(WebDriver d) {
+						try {
+							d.manage()
+									.timeouts()
+									.implicitlyWait(
+											ZERO_WAIT_TIMEOUT,
+											TimeUnit.SECONDS);
+							if (d.findElements(By.xpath(locator)).size() == 0) {
+								return false;
+							}
+							d.manage()
+									.timeouts()
+									.implicitlyWait(
+											IMPLICIT_WAIT_TIMEOUT,
+											TimeUnit.SECONDS);
+							return !d.findElement(By.xpath(locator))
+									.isDisplayed();
+						} catch (NoSuchElementException e) {
+							return false;
+						}
+					}
+				});
+
 	}
 }
