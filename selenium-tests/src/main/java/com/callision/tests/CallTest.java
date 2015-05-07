@@ -1,5 +1,7 @@
 package com.callision.tests;
 
+import junit.framework.Assert;
+
 import org.testng.annotations.Test;
 
 import com.callision.browser.Browsers;
@@ -13,10 +15,14 @@ public class CallTest extends BaseTest {
 	public void makeCall() {
 		service = new TestService();
 		service.doLogin(UserFactory.getFirstUser());
-		DriverManager.getNewDriver(Browsers.FF);
+		window2 = DriverManager.getNewDriver();
 		service.doLogin(UserFactory.getSecondUser());
-		DriverManager.setDefaultDriver(driver1);
+		DriverManager.setDefaultDriver(window1);
 		service.callToNumber("1001");
+		Assert.assertEquals(1, service.getActiveCallsNumber());
+		DriverManager.setDefaultDriver(window2);
+		service.answerOnTheCall();
+		Assert.assertEquals(1, service.getActiveCallsNumber());
 	}
 
 }

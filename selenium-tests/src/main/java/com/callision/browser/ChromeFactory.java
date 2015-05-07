@@ -13,14 +13,15 @@ public class ChromeFactory extends BrowserFactory {
 	@Override
 	public WebDriver createBrowser(boolean acceptUntrustedCerts,
 			boolean assumeUntrustedIssuer) {
-//		ChromeOptions options = new ChromeOptions();
-//		options.addArguments("--start-maximized");
-//			options.addArguments("--disable-web-security");
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("--start-maximized");
+			options.addArguments("--disable-web-security");
+			options.addArguments("--disable-user-media-security=true");
 		
 		DesiredCapabilities chromeCapabilities = DesiredCapabilities.chrome();
 		chromeCapabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS,
 				acceptUntrustedCerts);
-//		chromeCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
+		chromeCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		LOGGER.info("Chrome profile was created");
 		String chromeBinary = System.getProperty(" ");
 		String os = System.getProperty("os.name").toLowerCase().substring(0, 3);

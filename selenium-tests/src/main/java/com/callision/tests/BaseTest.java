@@ -9,16 +9,17 @@ import com.callision.ui.service.TestService;
 
 public class BaseTest {
 
-	protected SeleniumDriver driver1;
+	protected SeleniumDriver window1;
+	protected SeleniumDriver window2;
 	protected TestService service;
 
 	@BeforeClass(alwaysRun = true)
 	public void suiteSetUp() {
-		driver1 = DriverManager.getDriver();
+		window1 = DriverManager.getDriver();
 	}
 
 	@AfterClass(alwaysRun = true)
 	public void suiteTearDown() {
-		DriverManager.closeAllOpenedBrowsers();
+	//	DriverManager.closeAllOpenedBrowsers();
 	}
 }

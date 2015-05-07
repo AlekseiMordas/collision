@@ -25,7 +25,7 @@ public class DriverManager {
 	 */
 	public static SeleniumDriver getDriver() {
 		if (null == defaultDriver.get()) {
-			getNewDriver(BrowserConfig.getBrowserType());
+			getNewDriver();
 		}
 		return defaultDriver.get();
 	}
@@ -97,9 +97,9 @@ public class DriverManager {
 	 * @param driverType
 	 * @return
 	 */
-	public static SeleniumDriver getNewDriver(Browsers browserType) {
+	public static SeleniumDriver getNewDriver() {
 		LOGGER.info("Create new instance of Driver.");
-		SeleniumDriver driver = new SeleniumDriver(browserType);;
+		SeleniumDriver driver = new SeleniumDriver(BrowserConfig.getBrowserType());;
 		drivers.add(driver);
 		defaultDriver.set(driver);
 		return driver;

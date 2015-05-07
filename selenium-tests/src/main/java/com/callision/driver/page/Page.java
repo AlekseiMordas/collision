@@ -27,5 +27,5 @@ public abstract class Page {
 		WebDriverWait wait = new WebDriverWait(driver.getDriver(), 60);
 		wait.until(WaitConditions.ajaxToFinishLoading());
 	}
-
+	
 }

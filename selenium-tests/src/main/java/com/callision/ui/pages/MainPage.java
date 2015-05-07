@@ -2,6 +2,9 @@ package com.callision.ui.pages;
 
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
+import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,24 +15,27 @@ import com.callision.driver.page.Page;
 import com.callision.driver.page.PageFactory;
 
 public class MainPage extends Page {
-
-	@FindBy(locator = "//*[@class='webphone']/*[@id='dialPad']//span")
+	private static final Logger LOGGER = Logger.getLogger(MainPage.class);
+	@FindBy(locator = "//body[not(contains(@style,'hidden'))]//*[@id='dialPad']/div/strong")
 	private BrowserElement dialPad;
 	
-	@FindBy(locator = "//input[@id='dialNumF']")
+	@FindBy(locator = "//body//input[@id='dialNumF']")
 	private BrowserElement dialNumberInput;
 	
-	@FindBy(locator = "//*[@id='dialEndCall']")
+	@FindBy(locator = "//body//*[@id='dialEndCall']")
 	private BrowserElement dialStartCallButton;
 	
-	@FindBy(locator = "//*[@class='calls_count']")
+	@FindBy(locator = "//body//*[@class='calls_count']")
 	private BrowserElement callsCountNumber;
 	
-	@FindBy(locator = "//*[@id='calls_tab']")
+	@FindBy(locator = "//body//*[@id='calls_tab']")
 	private BrowserElement callsTab;
 	
 	@FindBy(locator = "//div[@class='results']/div[contains(@class,'listing')]")
 	private BrowserElement resultList;
+	
+	@FindBy(locator = "//body[not(contains(@style,'hidden'))]//*[@class='inc-call-answer']")
+	private BrowserElement answerOnTheCall;
 
 	public MainPage() {
 		super();
@@ -37,7 +43,7 @@ public class MainPage extends Page {
 
 	@Override
 	public void checkPage() {
-	//	dialPad.waitForElement(ONE_MINUTE_WAIT);
+		dialPad.waitForElement(ONE_MINUTE_WAIT);
 	}
 
 	public List<WebElement> getSearchedResults() {
@@ -54,6 +60,9 @@ public class MainPage extends Page {
 	}
 	
 	public CallsTabPage openCallsTab() {
+		driver.getDriver().getWindowHandles().size();
+		
+		
 		if(!callsTab.getAttribute("class").contains("active")){
 			callsTab.click();
 			waitForAjax();
@@ -61,7 +70,19 @@ public class MainPage extends Page {
 		return PageFactory.initElements(driver, CallsTabPage.class);
 	}
 
+	public MainPage answerOnTheCall() {
+		try{
+		answerOnTheCall.waitForElement(ONE_MINUTE_WAIT);}
+		catch(RuntimeException ex){
+			throw new RuntimeException("Call failed. There is no answer button");
+		}
+		answerOnTheCall.click();
+		return PageFactory.initElements(driver, MainPage.class);
+	}
 	
+	public int getCallNumbers() {
+		return Integer.parseInt(callsCountNumber.getText().trim());
+	}
 	
 
 }
